@@ -1,14 +1,15 @@
+
 from query import Query
 from server_query import ServerQuery
 
 
 class ProxyQuery(Query):
-    def __init__(self):
+    def __init__(self, conf, stone, logger):
         """
 
         """
         # TODO 后期涉及到多进程
-        self.server_query = ServerQuery()
+        self.server_query = ServerQuery(conf=conf, stone=stone, logger=logger)
 
         pass
 
@@ -18,8 +19,7 @@ class ProxyQuery(Query):
         :return:
         """
         # TODO 异常处理
-        self.server_query.code = code
-        self.query = self.server_query.run()
+        self.query = self.server_query.run(code)
         pass
 
     def run(self):
