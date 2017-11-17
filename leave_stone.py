@@ -53,6 +53,7 @@ class User_info(Base):
     id = Column(Integer(), primary_key=True)
     code = Column(String(10))
     ip_address = Column(String(16))
+    on_status = Column(Boolean())
     # TODO 动态密码，适用于短信获取
     # password = Column(String(6))
     # TODO 手机号码

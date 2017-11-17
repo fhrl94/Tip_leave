@@ -6,7 +6,6 @@ from query import Query
 
 
 class ServerQuery(Query):
-
     def __init__(self, conf, stone, logger):
         """
         初始化
@@ -15,14 +14,14 @@ class ServerQuery(Query):
         self._stone = stone
         self._logger = logger
         self._conn = pymssql.connect(self._conf.get('server', 'ip'), self._conf.get('server', 'user'),
-                                     self._conf.get('server', 'password'), database=self._conf.get('server', 'database'))
+                                     self._conf.get('server', 'password'),
+                                     database=self._conf.get('server', 'database'))
         self._cur = self._conn.cursor()
         self._code = None
         self._uid = None
         self._logger.info("初始化人员信息")
         self._get_emp()
         pass
-
 
     # def _transform(self):
     #     """
@@ -41,7 +40,7 @@ class ServerQuery(Query):
         sql = """
         select top 100 RecieverID,SenderID,Subject,MsgType,RecDate,ReadDate,IsRead,IsDeal,SourceID
         from MS_Message 
-        where MsgType = 1 and IsDeal = 0 and RecieverID = '{uid}'
+        where MsgType = 1 and IsRead = 0 and RecieverID = '{uid}'
         """.format(uid=self._uid)
         self._cur.execute(sql)
         # emp_cols = ('receiver_id', 'sender_id', 'subject', 'message_type', 'receive_date', 'read_date', 'is_read',
@@ -59,7 +58,7 @@ class ServerQuery(Query):
         self._logger.debug("查询完成")
         pass
 
-    def run(self, code):
+    def run(self, code=None):
         """
         如果 self._code 为空,报错
         每次运行时，先通过 _get_query_uid() 将 code 转换为 Uid
@@ -70,11 +69,16 @@ class ServerQuery(Query):
         :return:
         """
         self.code = code
+        if self.code is None:
+            raise UserWarning("请输入工号")
         self._get_query_uid()
         self._get_data()
         if self.result:
-            print(self._get_msg_json())
+            # print(self._get_msg_json())
+            self._logger.debug("返回的文本是:{json}".format(json=self._get_msg_json()))
             return self._get_msg_json()
+        else:
+            return json.dumps('Null')
         pass
 
     def _get_msg_json(self):
@@ -88,6 +92,7 @@ class ServerQuery(Query):
             # print(temp)
             result.append(temp)
         return json.dumps(result)
+        # return result
         pass
 
     def _get_query_uid(self):
@@ -127,7 +132,7 @@ class ServerQuery(Query):
         for one in self._cur.fetchall():
             empinfo = Emp_Info()
             for count, col in enumerate(emp_cols):
-                if col in ('uid', 'em_id', ):
+                if col in ('uid', 'em_id',):
                     setattr(empinfo, col, str(one[count]))
                 else:
                     setattr(empinfo, col, one[count])
@@ -139,13 +144,11 @@ class ServerQuery(Query):
     def code(self):
         return self._code
 
-
     @code.setter
     def code(self, code):
         try:
             assert len(code) == 10 and isinstance(code, str), "输入工号错误"
         except AssertionError:
             self._logger.info("工号输入错误{code}".format(code=code))
-            raise TypeError("无此工号")
+            raise UserWarning("无此工号")
         self._code = str(code)
-
