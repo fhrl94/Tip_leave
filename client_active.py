@@ -19,9 +19,9 @@ if __name__ == '__main__':
                 msg.append(json_text)
         if isinstance(json_text, list):
             for one in json_text:
-                print(one.get('subject'),one.get('receive_date'))
+                print(one.get('subject'), one.get('receive_date'))
                 msg.append(one.get('subject') + one.get('receive_date'))
                 print(msg)
         if len(msg):
             win32api.MessageBox(0, "\n".join(msg), "共收到{num}新消息".format(num=len(msg)), win32con.MB_OK)
-        sleep(60*2)
+        sleep(60 * 2)

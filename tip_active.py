@@ -1,13 +1,10 @@
 import configparser
-import json
-
 import os
 import platform
 
 from leave_stone import stoneobject
 from mylogger import Logger
 from proxy_query import ProxyQuery
-from server_query import ServerQuery
 from web import Web
 
 if __name__ == '__main__':
@@ -33,7 +30,7 @@ if __name__ == '__main__':
     # list = json.loads(string)
     # print(list)
     proxy_query = ProxyQuery(conf=conf, stone=stone, logger=logger)
-    web = Web(proxy_handle=proxy_query,logger=logger)
+    web = Web(proxy_handle=proxy_query, logger=logger, port=int(conf.get('web', 'port')))
     web.get_web_install()
 
     pass

@@ -1,6 +1,4 @@
-import functools
-
-from leave_stone import User_info
+from leave_stone import UserInfo
 from query import Query
 from server_query import ServerQuery
 
@@ -16,7 +14,6 @@ class ProxyQuery(Query):
         self.server_query = ServerQuery(conf=conf, stone=stone, logger=logger)
 
         pass
-
 
     def run(self, code=None, ip_addr=None):
         """
@@ -50,10 +47,10 @@ class ProxyQuery(Query):
         :return:
         """
         self.code = code
-        result = self.stone.query(User_info).filter(User_info.code == self.code).one_or_none()
+        result = self.stone.query(UserInfo).filter(UserInfo.code == self.code).one_or_none()
         # 不存在则创建
         if result is None:
-            user_info = User_info()
+            user_info = UserInfo()
             user_info.code = self.code
             user_info.ip_address = ip_addr
             user_info.on_status = True
@@ -81,6 +78,5 @@ class ProxyQuery(Query):
             self.logger.info("工号输入错误{code}".format(code=code))
             raise UserWarning("无此工号")
         self._code = str(code)
-
 
     pass

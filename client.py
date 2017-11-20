@@ -4,7 +4,6 @@ from query import Query
 
 
 class Client(Query):
-
     def __init__(self, code):
         self.code = code
 

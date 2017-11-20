@@ -45,29 +45,28 @@ session = DBSession()
 #         return self.id
 
 
-class User_info(Base):
+class UserInfo(Base):
     # 表的名字:
-    __tablename__ = 'User_info'
+    __tablename__ = 'UserInfo'
 
     # 表的结构:
     id = Column(Integer(), primary_key=True)
     code = Column(String(10))
     ip_address = Column(String(16))
     on_status = Column(Boolean())
+
     # TODO 动态密码，适用于短信获取
     # password = Column(String(6))
     # TODO 手机号码
     # Tel = Column(String(11))
     # TODO 计算机名称
 
-
     def __str__(self):
         return self.id
 
-class Message_primitive(Base):
-
+class MessagePrimitive(Base):
     # 表的名字:
-    __tablename__ = 'Message_primitive'
+    __tablename__ = 'MessagePrimitive'
 
     # 表的结构:
     id = Column(Integer(), primary_key=True)
@@ -81,16 +80,16 @@ class Message_primitive(Base):
     is_deal = Column(Boolean())
     flow_object_id = Column(String(36))
 
-
     def __str__(self):
         return self.id
 
-class Emp_Info(Base):
+
+class EmpInfo(Base):
     """
     全局id、工号、empty_id、名称
     """
     # 表的名字:
-    __tablename__ = 'Emp_Info'
+    __tablename__ = 'EmpInfo'
 
     # 表的结构:
     id = Column(Integer(), primary_key=True)
@@ -101,6 +100,8 @@ class Emp_Info(Base):
 
     def __str__(self):
         return self.id
+
+
 # 如果没有创建表，则创建
 Base.metadata.create_all(engine)
 

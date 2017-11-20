@@ -1,7 +1,7 @@
 import json
 import pymssql
 
-from leave_stone import Emp_Info
+from leave_stone import EmpInfo
 from query import Query
 
 
@@ -46,7 +46,7 @@ class ServerQuery(Query):
         # emp_cols = ('receiver_id', 'sender_id', 'subject', 'message_type', 'receive_date', 'read_date', 'is_read',
         #             'is_deal', 'flow_object_id', )
         # for one in self._cur.fetchall():
-        #     msg_info = Message_primitive()
+        #     msg_info = MessagePrimitive()
         #     for count, col in enumerate(emp_cols):
         #         if col in ('receiver_id', 'sender_id', 'flow_object_id', ):
         #             setattr(msg_info, col, str(one[count]))
@@ -100,10 +100,10 @@ class ServerQuery(Query):
         _get_data() 调用前置,将code 转换为 self._uid
         :return:
         """
-        uid = self._stone.query(Emp_Info.uid).filter(Emp_Info.code == self.code).one_or_none()
+        uid = self._stone.query(EmpInfo.uid).filter(EmpInfo.code == self.code).one_or_none()
         if uid is None:
             self._get_emp()
-            uid = self._stone.query(Emp_Info).filter(Emp_Info.code == self.code).one_or_none()
+            uid = self._stone.query(EmpInfo).filter(EmpInfo.code == self.code).one_or_none()
             try:
                 assert uid is not None, "UID获取错误"
             except AssertionError:
@@ -118,7 +118,7 @@ class ServerQuery(Query):
         获取金蝶系统中所有人员的 Uid、code、emp_id、name，存储至数据库
         :return:
         """
-        self._stone.query(Emp_Info).delete()
+        self._stone.query(EmpInfo).delete()
         self._stone.commit()
         sql = """
                 select hbu.ID, hbu.Account, hbu.FEmpID,he.Name
@@ -130,7 +130,7 @@ class ServerQuery(Query):
         self._cur.execute(sql)
         emp_cols = ('uid', 'code', 'em_id', 'name',)
         for one in self._cur.fetchall():
-            empinfo = Emp_Info()
+            empinfo = EmpInfo()
             for count, col in enumerate(emp_cols):
                 if col in ('uid', 'em_id',):
                     setattr(empinfo, col, str(one[count]))
