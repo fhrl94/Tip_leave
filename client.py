@@ -13,7 +13,7 @@ class Client(Query):
         pass
 
     def _get_data(self):
-        req = requests.get(url='http://172.16.9.144:8080/query/{code}'.format(code=self.code))
+        req = requests.get(url='http://172.16.9.144:8000/query/{code}'.format(code=self.code))
         # print(req.url)
         # print(req.text)
         # print(req.json())

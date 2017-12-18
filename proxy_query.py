@@ -54,6 +54,7 @@ class ProxyQuery(Query):
             user_info.code = self.code
             user_info.ip_address = ip_addr
             user_info.on_status = True
+            user_info.special_status = False
             self.stone.add(user_info)
             self.stone.commit()
         else:
@@ -61,8 +62,8 @@ class ProxyQuery(Query):
             if result.ip_address != ip_addr:
                 result.on_status = False
                 self.stone.commit()
-            # 存在且查询状态不为 True ，抛出异常
-            if not result.on_status:
+            # 存在且查询状态【on_status】 或 special_status【特殊】不为True
+            if  not (result.special_status or result.on_status):
                 raise UserWarning("账号锁定，请与管理员联系")
         pass
 
